@@ -1,6 +1,7 @@
 branches:
   - main
-  - 
+  - name: beta
+    prerelease: true
 debug: true
 ci: true
 tagFormat: insights@${version}
