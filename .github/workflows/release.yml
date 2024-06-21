@@ -8,6 +8,7 @@ on:
   pull_request:
     branches:
       - beta
+      - main
 
 jobs:
   release:
@@ -25,7 +26,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Debug HEAD_REF
+        run: echo "HEAD_REF is ${{ github.head_ref }}"
+
       - name: Release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npx semantic-release --dry-run --no-ci --branches '${github.head_ref}'")"
+        run: npx semantic-release --dry-run --no-ci --branches ${{github.head_ref}}
