@@ -32,4 +32,4 @@ jobs:
       - name: Release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npx semantic-release --dry-run
+        run: npx semantic-release --dry-run --branches ${{github.head_ref}}
