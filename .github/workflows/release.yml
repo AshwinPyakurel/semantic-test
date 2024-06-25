@@ -9,10 +9,8 @@ on:
   push:
     branches:
       - main
-      - beta
   pull_request:
     branches:
-      - beta
       - main
 
 jobs:
