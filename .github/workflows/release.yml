@@ -36,4 +36,4 @@ jobs:
           GIT_AUTHOR_EMAIL: ashwinpyakurel57@gmail.com
           GIT_COMMITTER_NAME: AshwinPyakurel
           GIT_COMMITTER_EMAIL: ashwinpyakurel57@gmail.com
-        run: npx semantic-release --dry-run --branches ${{github.head_ref}}
+        run: npx semantic-release
