@@ -58,7 +58,7 @@ jobs:
           echo $VERSION
 
     outputs:
-      tag: ${{ env.tag }}
+      tag: ${{ env.build_tag }}
 
   release-image:
     needs: release
@@ -82,6 +82,6 @@ jobs:
           echo "- **Branch name** - ${{github.event.input.branch}}" :octocat: >> $GITHUB_STEP_SUMMARY
 
           echo ${{env.build_tag}}
-          echo ${{ needs.release-artifact.outputs.tag }}
+          echo ${{ needs.release.outputs.tag }}
           echo ${{github.event.input.tag}}
          
