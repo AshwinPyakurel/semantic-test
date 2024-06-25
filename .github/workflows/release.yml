@@ -1,6 +1,12 @@
 name: Release
 
 on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Branch to deploy from
+        type: string
+        required: true
   push:
     branches:
       - main
@@ -25,9 +31,9 @@ jobs:
         run: npm install
 
       - name: Debug HEAD_REF
-        run: echo "HEAD_REF is ${{ github.head_ref }}"
+        run: echo "HEAD_REF is '${HEAD_REF}'"
 
       - name: Release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npx semantic-release --dry-run --no-ci --branches ${github.head_ref}
+        run: npx semantic-release --dry-run --no-ci --branches '${HEAD_REF}'
