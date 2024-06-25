@@ -79,8 +79,9 @@ jobs:
           echo "### BUILD & DEPLOY INFO :rocket:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
           echo "- **Deployer** - <img src='${actual_url}' width="20"> ${{ github.actor }} :technologist:" >> $GITHUB_STEP_SUMMARY
-          echo "- **Branch name** -" ${{github.event.input.branch}} :octocat: >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch name** - ${{github.event.inputs.branch}}" :octocat: >> $GITHUB_STEP_SUMMARY
           echo "- **Image Version** - ${{env.build_tag}}" :image: >> GITHUB_STEP_SUMMARY
+          echo "- **Image Version** - ${{needs.release.outputs.tag}}" :image: >> GITHUB_STEP_SUMMARY
 
           echo ${{env.build_tag}}
           echo ${{needs.release.outputs.tag }}
