@@ -62,9 +62,6 @@ jobs:
 
   release-image:
     needs: release
-    defaults:
-      run:
-        working-directory: ./services/insights
     runs-on: ubuntu-latest
     steps:
       - name: Split tag
