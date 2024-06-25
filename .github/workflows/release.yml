@@ -32,13 +32,18 @@ jobs:
 
       - name: Debug HEAD_REF
         run: echo "HEAD_REF is '${HEAD_REF}'"
+      
+      - name: Debug inputs
+        run: echo "Input branch is '${{ github.event.inputs.branch }}'"
 
       - name: Release
         id: release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          output=$( npx semantic-release --dry-run --no-ci --branches ${{github.event.input.branch}})
+          branch=${{ github.event.inputs.branch }}
+          echo "Using branch: $branch"
+          output=$(npx semantic-release --dry-run --no-ci --branches $branch)
           next_version=$(echo "$output" | grep -oP 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+')
           echo "next_version=$next_version" >> $GITHUB_ENV
 
