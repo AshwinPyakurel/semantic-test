@@ -50,4 +50,4 @@ jobs:
           echo "next_version=$next_version" >> $GITHUB_ENV
 
       - name: Use the version
-        run: echo "The version is ${{ env.next-version }}"
+        run: echo "The version is ${{ env.next_version }}"
