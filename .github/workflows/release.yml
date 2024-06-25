@@ -39,8 +39,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           output=$( npx semantic-release --dry-run --no-ci --branches ${{github.event.input.branch}})
-          next_version=(next_version=$(echo "$output" | grep -oP 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+'))
-          echo "next_version=${{next_version}}" >> GITHUB_ENV
+          next_version=$(echo "$output" | grep -oP 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+')
+          echo "next_version=$next_version" >> $GITHUB_ENV
 
       - name: Use the version
         run: echo "The version is ${{ env.next-version }}"
