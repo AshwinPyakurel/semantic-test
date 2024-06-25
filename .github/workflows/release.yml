@@ -30,4 +30,4 @@ jobs:
       - name: Release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npx semantic-release --dry-run --no-ci --branches ${refs/pull/18/merge}
+        run: npx semantic-release --dry-run --no-ci --branches 'refs/pull/18/merge'
