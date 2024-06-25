@@ -72,7 +72,7 @@ jobs:
       tag: ${{ env.tag }}
 
   release-image:
-    needs: release-artifact
+    needs: release
     defaults:
       run:
         working-directory: ./services/insights
