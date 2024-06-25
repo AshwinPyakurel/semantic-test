@@ -1,6 +1,12 @@
 name: Release
 
 on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Branch to deploy from
+        type: string
+        required: true
   push:
     branches:
       - main
