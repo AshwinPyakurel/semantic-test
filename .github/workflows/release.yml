@@ -25,7 +25,7 @@ jobs:
         run: npm install
 
       - name: Debug HEAD_REF
-        run: echo "HEAD_REF is ${{ github.head_ref }}"
+        run: echo "HEAD_REF is '${HEAD_REF}'"
 
       - name: Release
         env:
