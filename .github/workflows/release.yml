@@ -48,4 +48,54 @@ jobs:
           echo "build_tag=$build_tag" >> GITHUB_ENV
 
       - name: Use the version
-        run: echo "The version is ${{ env.next_version }}"
+        run: echo "The version is ${{ env.build_tag }}"
+      
+      - name: Create Build Artifacts
+        id: create_build_artifact
+        run: |
+          VERSION=${env.build_tag}
+          ARTIFACT_NAME=${VERSION}.zip
+          cp package.json .npmrc dist/
+          (cd dist && zip -r9q ${{ github.workspace }}/${ARTIFACT_NAME} .)
+          ls -al ${{ github.workspace }}
+          echo "version=${VERSION}" >> $GITHUB_ENV
+          echo "artifact_name=${ARTIFACT_NAME}" >> $GITHUB_ENV
+
+      - name: Upload Build Artifacts to GitHub
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.version }}
+          path: ./${{ env.artifact_name }}
+          retention-days: 14
+
+    outputs:
+      tag: ${{ env.tag }}
+
+  release-image:
+    needs: release-artifact
+    defaults:
+      run:
+        working-directory: ./services/insights
+    runs-on: ubuntu-latest
+    steps:
+      - name: Split tag
+        id: tag_number
+        uses: rishabhgupta/split-by@v1
+        with:
+          string: ${{ needs.release-artifact.outputs.tag }}
+          split-by: '@'
+
+      - name: Checkout
+        run:  |
+          avatar_url=${{ github.event.sender.avatar_url }}
+          actual_url="https://avatars.githubusercontent.com/u/${avatar_url:40:100}"
+
+          echo "### BUILD & DEPLOY INFO :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+          echo "- **Deployer** - <img src='${actual_url}' width="20"> ${{ github.actor }} :technologist:" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch name** - ${{github.event.input.branch}}" :octocat: >> $GITHUB_STEP_SUMMARY
+
+          echo ${{env.build_tag}}
+          echo ${{ needs.release-artifact.outputs.tag }}
+          echo ${{github.event.input.tag}}
+         
