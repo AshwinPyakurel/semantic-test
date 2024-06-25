@@ -55,18 +55,7 @@ jobs:
         run: |
           VERSION=${{env.build_tag}}
           ARTIFACT_NAME=${VERSION}.zip
-          cp package.json .npmrc dist/
-          (cd dist && zip -r9q ${{ github.workspace }}/${ARTIFACT_NAME} .)
-          ls -al ${{ github.workspace }}
-          echo "version=${VERSION}" >> $GITHUB_ENV
-          echo "artifact_name=${ARTIFACT_NAME}" >> $GITHUB_ENV
-
-      - name: Upload Build Artifacts to GitHub
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ env.version }}
-          path: ./${{ env.artifact_name }}
-          retention-days: 14
+          echo $VERSION
 
     outputs:
       tag: ${{ env.tag }}
