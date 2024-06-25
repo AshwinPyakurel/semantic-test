@@ -44,6 +44,7 @@ jobs:
         run: |
           timestamp=$(date +%s)
           build_tag="${next_version}.build.${timestamp}"
+          echo $build_tag
           echo "build_tag=$build_tag" >> GITHUB_ENV
 
       - name: Use the version
