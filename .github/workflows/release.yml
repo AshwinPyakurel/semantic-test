@@ -7,13 +7,6 @@ on:
        description: branch
        type: string
     
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -44,10 +37,14 @@ jobs:
           branch=${{ github.event.inputs.branch }}
           echo "Using branch: $branch"
           output=$(npx semantic-release --dry-run --no-ci --branches $branch)
-          echo "$output"
           next_version=$(echo "$output" | grep -oP 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+')
-          echo "$next_version"
           echo "next_version=$next_version" >> $GITHUB_ENV
+        
+      - name: Create Build Tag
+        run: |
+          timestamp=$(date +%s)
+          build_tag="${next_version}.build.${timestamp}"
+          echo "build_tag=$build_tag" >> GITHUB_ENV
 
       - name: Use the version
         run: echo "The version is ${{ env.next_version }}"
