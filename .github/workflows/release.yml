@@ -53,7 +53,7 @@ jobs:
       - name: Create Build Artifacts
         id: create_build_artifact
         run: |
-          VERSION=${env.build_tag}
+          VERSION=${{env.build_tag}}
           ARTIFACT_NAME=${VERSION}.zip
           cp package.json .npmrc dist/
           (cd dist && zip -r9q ${{ github.workspace }}/${ARTIFACT_NAME} .)
