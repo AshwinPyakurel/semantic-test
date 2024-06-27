@@ -31,9 +31,7 @@ jobs:
         run: |
           branch=refs/pull/${{ github.event.number }}/merge
           echo "Using branch: $branch"
-          output=$(npx semantic-release --dry-run --no-ci --branches ${{github.head_ref}})
-          next_version=$(echo "$output" | grep -oP 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+')
-          echo "next_version=$next_version" >> $GITHUB_ENV
+          npx semantic-release --dry-run --no-ci --branches ${{github.head_ref}}
         
       - name: Create Build Tag
         run: |
