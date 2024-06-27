@@ -35,14 +35,14 @@ jobs:
         run: |
           OUTPUT="$(bash -c "unset GITHUB_ACTIONS && npx semantic-release --dry-run --no-ci --branches '${HEAD_REF}'")"
           NEW_RELEASE_VERSION=$(echo "$OUTPUT" | grep -oP 'The next release version is \K(\d+\.\d+\.\d+)')
-          echo "next_version=$NEW_RELEASE_VERSION" >> GITHUB_ENV
+          echo "next_version=$NEW_RELEASE_VERSION" >> $GITHUB_ENV
         
       - name: Create Build Tag
         run: |
           timestamp=$(date +%s)
           build_tag="${next_version}.build.${timestamp}"
           echo $build_tag
-          echo "build_tag=$build_tag" >> GITHUB_ENV
+          echo "build_tag=$build_tag" >> $GITHUB_ENV
 
       - name: Use the version
         run: echo "The version is ${{ env.build_tag }}"
