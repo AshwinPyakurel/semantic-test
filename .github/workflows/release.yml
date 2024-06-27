@@ -31,7 +31,7 @@ jobs:
           HEAD_REF: ${{ github.head_ref }}
         run: |
           echo ${env.HEAD_REF}
-          branch=refs/pull/${{ github.event.number }}/merge
+          branch='refs/pull/${{ github.event.number }}/merge'
           echo "Using branch: $branch"
           npx semantic-release --dry-run --no-ci --branches $branch
         
