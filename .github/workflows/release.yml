@@ -20,9 +20,6 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Debug HEAD_REF
-        run: echo "HEAD_REF is '${HEAD_REF}'"
       
       - name: Debug inputs
         run: echo "Input branch is '${{ github.event.inputs.branch }}'"
@@ -34,7 +31,7 @@ jobs:
         run: |
           branch=refs/pull/${{ github.event.number }}/merge
           echo "Using branch: $branch"
-          output=$(npx semantic-release --dry-run --no-ci --branches $branch)
+          output=$(npx semantic-release --dry-run --no-ci --branches ${{github.head_ref}})
           next_version=$(echo "$output" | grep -oP 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+')
           echo "next_version=$next_version" >> $GITHUB_ENV
         
