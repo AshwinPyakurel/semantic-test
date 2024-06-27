@@ -1,80 +1,31 @@
-name: Release
+name: Final
 
 on:
   pull_request:
-    branches:
-      - main
-    
+      branches:
+          - main
+
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20'
-
-      - name: Install dependencies
-        run: npm install
-      
-      - name: Debug inputs
-        run: echo "Input branch is '${{ github.event.inputs.branch }}'"
-
-      - name: Release
-        id: release
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          HEAD_REF: ${{ github.head_ref }}
-        run: |
-          echo ${GITHUB_ACTIONS}
-          OUTPUT="$(bash -c "unset GITHUB_ACTIONS && npx semantic-release --dry-run --no-ci --branches '${HEAD_REF}'")"
-          NEW_RELEASE_VERSION=$(echo "$OUTPUT" | grep -oP 'The next release version is \K(\d+\.\d+\.\d+)')
-          echo "new-release-version=$NEW_RELEASE_VERSION" >> "$GITHUB_OUTPUT"
-        
-      - name: Create Build Tag
-        run: |
-          timestamp=$(date +%s)
-          build_tag="${next_version}.build.${timestamp}"
-          echo $build_tag
-          echo "build_tag=$build_tag" >> GITHUB_ENV
-
-      - name: Use the version
-        run: echo "The version is ${{ env.build_tag }}"
-      
-      - name: Create Build Artifacts
-        id: create_build_artifact
-        run: |
-          VERSION=${{env.build_tag}}
-          ARTIFACT_NAME=${VERSION}.zip
-          echo $VERSION
-
     outputs:
-      tag: ${{ env.build_tag }}
-
-  release-image:
-    needs: release
-    runs-on: ubuntu-latest
+      new-release-version: ${{ steps.dry-release.outputs.new-release-version }}
     steps:
-      - name: Split tag
-        id: tag_number
-        uses: rishabhgupta/split-by@v1
-        with:
-          string: ${{ needs.release-artifact.outputs.tag }}
-          split-by: '@'
-
-      - name: Checkout
-        run:  |
-          avatar_url=${{ github.event.sender.avatar_url }}
-          actual_url="https://avatars.githubusercontent.com/u/${avatar_url:40:100}"
-
-          echo "### BUILD & DEPLOY INFO :rocket:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
-          echo "- **Deployer** - <img src='${actual_url}' width="20"> ${{ github.actor }} :technologist:" >> $GITHUB_STEP_SUMMARY
-          echo "- **Branch name** - ${{github.event.inputs.branch}}" :octocat: >> $GITHUB_STEP_SUMMARY
-          echo "- **Image Version** - ${{env.build_tag}}" >> GITHUB_STEP_SUMMARY
-          echo "- **Image Version** - ${{needs.release.outputs.tag}}" >> GITHUB_STEP_SUMMARY
-         
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with :
+        fetch-depth: 0
+        ref: ${{ github.head_ref }}
+    - name: Set up Node.js
+      uses: actions/setup-node@v3          
+    - name: Semantic Release dry run
+      id: dry-release
+      run: |
+        OUTPUT="$(bash -c "unset GITHUB_ACTIONS && npx semantic-release --dry-run --no-ci --branches '${HEAD_REF}'")"
+        NEW_RELEASE_VERSION=$(echo "$OUTPUT" | grep -oP 'The next release version is \K(\d+\.\d+\.\d+)')
+        echo "new-release-version=$NEW_RELEASE_VERSION" >> "$GITHUB_OUTPUT"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        HEAD_REF: ${{ github.head_ref }}
+    - name: Use the version
+      run: echo "The version is ${{ steps.dry-release.outputs.new-release-version }}"
