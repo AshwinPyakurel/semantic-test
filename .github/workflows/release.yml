@@ -31,7 +31,7 @@ jobs:
         run: |
           branch=refs/pull/${{ github.event.number }}/merge
           echo "Using branch: $branch"
-          npx semantic-release --dry-run --no-ci --branches ${{github.head_ref}}
+          npx semantic-release --dry-run --no-ci --branches ${{branch}}
         
       - name: Create Build Tag
         run: |
