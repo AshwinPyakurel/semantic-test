@@ -1,11 +1,9 @@
 name: Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      branch:
-       description: branch
-       type: string
+  pull_request:
+    branches:
+      - main
     
 jobs:
   release:
@@ -34,7 +32,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          branch=${{ github.event.inputs.branch }}
+          branch=refs/pull/${{ github.event.number }}/merge
           echo "Using branch: $branch"
           output=$(npx semantic-release --dry-run --no-ci --branches $branch)
           next_version=$(echo "$output" | grep -oP 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+')
