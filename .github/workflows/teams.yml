@@ -13,9 +13,9 @@ jobs:
         uses: paritytech/list-team-members@main
         with:
           ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          team: developers
+          team: Avengers Team
           # optional, in case that it searches on a different organization
-          organization: paritytech
+          organization: laudiio
         # example showing how to use the content
       - name: Show data
         run: |
